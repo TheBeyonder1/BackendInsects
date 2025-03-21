@@ -1,14 +1,11 @@
-from flask import Flask, request, jsonify
-import base64
-import os
-from procesamiento_imagen import analizar_imagen_google_vision
-from clasificacion import contiene_insecto
-from informacion_imagen import buscar_info_gemini
-from informacion_imagen import buscar_insecto_inaturalist
+from flask import Blueprint, request, jsonify
+from app.services.procesamiento_imagen import analizar_imagen_google_vision
+from app.services.clasificacion import contiene_insecto
+from app.services.informacion_imagen import buscar_info_gemini, buscar_insecto_inaturalist
 
-app = Flask(__name__)
+predict_bp = Blueprint('predict', __name__)  # nombre y __name__ necesarios
 
-@app.route('/predict', methods=['POST'])
+@predict_bp.route('/predict', methods=['POST'])
 def predict():
     if 'image' not in request.files:
         return jsonify({"error": "No se envió ninguna imagen"}), 400
@@ -17,9 +14,7 @@ def predict():
     imagen_path = "temp_image.jpg"
     imagen.save(imagen_path)
 
-    # 📌 Analizar la imagen con Google Vision
     resultado = analizar_imagen_google_vision(imagen_path)
-
     if not resultado:
         return jsonify({"error": "No se pudo analizar la imagen"}), 500
 
@@ -48,6 +43,3 @@ def predict():
         })
 
     return jsonify({"error": "No se encontraron coincidencias."})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)

@@ -1,6 +1,6 @@
-from configuracion import PALABRAS_CLAVE_INSECTOS
+from app.services.configuracion import PALABRAS_CLAVE_INSECTOS
 
-from configuracion import GOOGLE_VISION_API_KEY
+from app.services.configuracion import GOOGLE_VISION_API_KEY
 
 
 def contiene_insecto(etiquetas):
