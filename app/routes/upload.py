@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from services.s3 import subir_imagen_a_s3
+from app.services.s3 import subir_imagen_a_s3
 from werkzeug.utils import secure_filename
 from datetime import datetime
 
