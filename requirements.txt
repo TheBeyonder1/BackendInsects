@@ -1,5 +1,12 @@
 Flask
-google-cloud-vision
-google-generativeai
-python-dotenv
-requests
+Flask-SQLAlchemy         # ORM para la base de datos
+Flask-Migrate            # Para manejar migraciones de la base de datos
+python-dotenv            # Variables de entorno desde .env
+requests                 # Llamadas HTTP (iNaturalist, etc)
+google-cloud-vision      # API de Google Vision
+google-generativeai      # Gemini API (Google Generative AI)
+mysqlclient             # MySQL
+boto3                   #almacenamiento s3
+
+Flask-JWT-Extended  # JWT   login
+Werkzeug
