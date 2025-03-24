@@ -1,1 +1,2 @@
-from .models import db
+
+from .models import db,  User, Post, Like, Comment
