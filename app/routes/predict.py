@@ -2,10 +2,13 @@ from flask import Blueprint, request, jsonify
 from app.services.procesamiento_imagen import analizar_imagen_google_vision
 from app.services.clasificacion import contiene_insecto
 from app.services.informacion_imagen import buscar_info_gemini, buscar_insecto_inaturalist
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 predict_bp = Blueprint('predict', __name__)  # nombre y __name__ necesarios
 
 @predict_bp.route('/predict', methods=['POST'])
+@jwt_required()
 def predict():
     if 'image' not in request.files:
         return jsonify({"error": "No se envió ninguna imagen"}), 400
