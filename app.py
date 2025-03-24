@@ -1,5 +1,5 @@
 from app import create_app
-from app.models.models import db
+from app.models.models import db,User,Post,Like,Comment
 
 app = create_app()
 
