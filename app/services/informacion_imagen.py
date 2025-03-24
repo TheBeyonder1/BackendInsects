@@ -1,6 +1,6 @@
 import requests
 import google.generativeai as genai
-from configuracion import GEMINI_API_KEY
+from app.services.configuracion import GEMINI_API_KEY
 
 # Configurar la API de Gemini
 genai.configure(api_key=GEMINI_API_KEY)

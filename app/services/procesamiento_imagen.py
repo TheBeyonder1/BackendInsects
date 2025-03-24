@@ -1,6 +1,6 @@
 import base64
 import requests
-from configuracion import GOOGLE_VISION_API_KEY
+from app.services.configuracion import GOOGLE_VISION_API_KEY
 
 def cargar_imagen_base64(imagen_path):
     """Codifica una imagen en formato base64"""
