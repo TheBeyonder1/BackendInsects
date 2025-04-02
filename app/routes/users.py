@@ -10,25 +10,29 @@ def register():
     if User.query.filter_by(email=data['email']).first():
         return jsonify({"error": "Email ya registrado"}), 400
 
-    nuevo_User = User(
+    nuevo_usuario = User(
         nombre=data['nombre'],
         email=data['email']
     )
-    nuevo_User.set_password(data['contraseña'])
-    db.session.add(nuevo_User)
+    nuevo_usuario.set_password(data['password'])  # Asegúrate de usar 'password' en el JSON
+    db.session.add(nuevo_usuario)
     db.session.commit()
 
-    return jsonify({"mensaje": "User registrado correctamente"}), 201
+    return jsonify({"mensaje": "Usuario registrado correctamente"}), 201
 
 
 @users_bp.route('/login', methods=['POST'])
 def login():
     data = request.json
-    User = User.query.filter_by(email=data['email']).first()
+    usuario = User.query.filter_by(email=data['email']).first()
 
-    if User and User.check_password(data['contraseña']):
-        token = create_access_token(identity=User.id)
-        return jsonify({"token": token}), 200
+    if usuario and usuario.check_password(data['password']):
+        token = create_access_token(identity=usuario.id)
+        return jsonify({
+            "token": token,
+            "user_id": usuario.id,
+            "nombre": usuario.nombre
+        }), 200
 
     return jsonify({"error": "Credenciales inválidas"}), 401
 
@@ -36,9 +40,13 @@ def login():
 @users_bp.route('/perfil', methods=['GET'])
 @jwt_required()
 def perfil():
-    User_id = get_jwt_identity()
-    User = User.query.get(User_id)
+    user_id = get_jwt_identity()
+    usuario = User.query.get(user_id)
+
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
     return jsonify({
-        "nombre": User.nombre,
-        "email": User.email
+        "nombre": usuario.nombre,
+        "email": usuario.email
     })
