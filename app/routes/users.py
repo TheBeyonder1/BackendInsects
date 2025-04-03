@@ -31,7 +31,8 @@ def login():
         return jsonify({
             "token": token,
             "user_id": usuario.id,
-            "nombre": usuario.nombre
+            "nombre": usuario.username,
+            "email": usuario.email
         }), 200
 
     return jsonify({"error": "Credenciales inválidas"}), 401
