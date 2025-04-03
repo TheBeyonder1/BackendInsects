@@ -27,7 +27,9 @@ def login():
     usuario = User.query.filter_by(email=data['email']).first()
 
     if usuario and usuario.check_password(data['password']):
-        token = create_access_token(identity=usuario.id)
+       # token = create_access_token(identity=usuario.id)
+        token = create_access_token(identity=str(usuario.id))  # 🔹 Convierte user.id a string
+
         return jsonify({
             "token": token,
             "user_id": usuario.id,
