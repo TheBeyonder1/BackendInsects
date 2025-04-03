@@ -11,7 +11,7 @@ def register():
         return jsonify({"error": "Email ya registrado"}), 400
 
     nuevo_usuario = User(
-        nombre=data['nombre'],
+        nombre=data['username'],
         email=data['email']
     )
     nuevo_usuario.set_password(data['password'])  # Asegúrate de usar 'password' en el JSON
