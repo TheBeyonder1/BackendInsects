@@ -2,7 +2,6 @@ import boto3
 from flask import current_app
 
 def subir_imagen_a_s3(archivo, nombre_destino):
-    # Crear cliente S3 usando la configuración de Flask
     s3 = boto3.client(
         's3',
         aws_access_key_id=current_app.config['AWS_ACCESS_KEY'],
@@ -16,7 +15,7 @@ def subir_imagen_a_s3(archivo, nombre_destino):
         archivo,
         bucket_name,
         nombre_destino,
-        ExtraArgs={'ACL': 'public-read', 'ContentType': archivo.content_type}
+        ExtraArgs={'ContentType': archivo.content_type}  # ❌ Quitamos 'ACL': 'public-read'
     )
 
     url = f"https://{bucket_name}.s3.{current_app.config['AWS_REGION']}.amazonaws.com/{nombre_destino}"
