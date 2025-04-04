@@ -24,14 +24,17 @@ class User(db.Model):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    image_url = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text, nullable=True)
+    image_url = db.Column(db.String(255), nullable=True)
+    description = db.Column(db.Text, nullable=False)
+    latitude = db.Column(db.Float, nullable=True)    # ✅ opcional
+    longitude = db.Column(db.Float, nullable=True)   # ✅ opcional
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship('User', backref=db.backref('posts', lazy=True))
 
     def __repr__(self):
         return f'<Post {self.id}>'
+
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)

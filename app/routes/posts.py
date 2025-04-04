@@ -3,7 +3,9 @@ from app.models import db, Post, Comment, Like, User
 
 posts_bp = Blueprint('posts', __name__)
 
-# 🔹 Crear un Post
+
+
+
 @posts_bp.route('/posts', methods=['POST'])
 def crear_post():
     data = request.json
@@ -11,10 +13,41 @@ def crear_post():
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
-    nuevo_post = Post(user_id=data['user_id'], image_url=data['image_url'], description=data.get('description', ''))
+    nuevo_post = Post(
+        user_id=data['user_id'],
+        image_url=data['image_url'],
+        description=data.get('description', ''),
+        latitude=data.get('latitude'),       # <- opcional
+        longitude=data.get('longitude')      # <- opcional
+    )
+    
     db.session.add(nuevo_post)
     db.session.commit()
+    
     return jsonify({"mensaje": "Post creado", "post_id": nuevo_post.id}), 201
+
+
+
+# 🔹 Obtener todos los Posts
+@posts_bp.route('/posts', methods=['GET'])
+def obtener_posts():
+    posts = Post.query.order_by(Post.id.desc()).all()
+
+    resultados = []
+    for post in posts:
+        resultados.append({
+            'id': post.id,
+            'user_id': post.user_id,
+            'image_url': post.image_url,
+            'description': post.description,
+            'created_at': post.created_at.isoformat() if post.created_at else None,
+            'latitude': post.latitude,      # <- nuevo
+            'longitude': post.longitude,    # <- nuevo
+            'total_likes': Like.query.filter_by(post_id=post.id).count(),
+            'total_comments': Comment.query.filter_by(post_id=post.id).count()
+        })
+
+    return jsonify(resultados), 200
 
 # 🔹 Editar un Post
 @posts_bp.route('/posts/<int:post_id>', methods=['PUT'])
@@ -104,3 +137,26 @@ def quitar_like(post_id):
     db.session.delete(like)
     db.session.commit()
     return jsonify({"mensaje": "Like eliminado", "total_likes": Like.query.filter_by(post_id=post_id).count()}), 200
+
+
+
+# 🔹 Obtener comentarios de un Post
+@posts_bp.route('/posts/<int:post_id>/comments', methods=['GET'])
+def obtener_comentarios(post_id):
+    post = Post.query.get(post_id)
+    if not post:
+        return jsonify({"error": "Post no encontrado"}), 404
+
+    comentarios = Comment.query.filter_by(post_id=post_id).order_by(Comment.created_at.asc()).all()
+    
+    resultado = []
+    for c in comentarios:
+        resultado.append({
+            "id": c.id,
+            "user_id": c.user_id,
+            "username": c.user.username if c.user else "Desconocido",
+            "text": c.text,
+            "created_at": c.created_at.isoformat() if c.created_at else None
+        })
+
+    return jsonify(resultado), 200
