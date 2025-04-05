@@ -10,14 +10,20 @@ def buscar_info_gemini(nombre_cientifico):
     """Usa Gemini API para obtener información detallada sobre un insecto."""
     
     prompt = f"""
-    Dame información sobre el insecto {nombre_cientifico}.
-    Quiero saber:
-    - Una descripcion Breve.
-    - Su hábitat.
-    - Su dieta.
-    - Su ciclo de vida.
-    - Su estado de conservación.
-    Responde de forma estructurada y concisa.
+    Proporcióname información detallada sobre el insecto identificado por el nombre científico {nombre_cientifico}.
+    La respuesta debe estar organizada en los siguientes campos, con un estilo claro, conciso y profesional:
+
+    Descripción: Redacta un párrafo que describa al insecto de forma fluida y natural, integrando de manera puntual sus características físicas más destacadas, el tamaño promedio y los rasgos distintivos que lo diferencian de otras especies.
+
+    Hábitat: Indica las zonas geográficas donde se encuentra, el tipo de ecosistema que habita (bosques, selvas, desiertos, etc.), y las condiciones ambientales típicas de su entorno.
+
+    Dieta: Explica qué tipo de alimentación tiene (herbívoro, carnívoro, detritívoro, etc.), qué consume habitualmente y cómo obtiene su alimento.
+
+    Ciclo de vida: Describe las etapas del desarrollo del insecto (huevo, larva, pupa, adulto), la duración estimada de cada etapa, y cualquier particularidad sobre su reproducción.
+
+    Estado de conservación: Indica si se encuentra en alguna categoría de amenaza según la UICN (si aplica), cuáles son sus principales amenazas y qué medidas de conservación existen.
+
+    No incluyas frases introductorias ni explicaciones adicionales. Comienza directamente con la información bajo cada título.
     """
 
     model = genai.GenerativeModel("gemini-2.0-flash-lite")
