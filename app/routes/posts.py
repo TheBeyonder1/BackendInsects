@@ -31,10 +31,16 @@ def crear_post():
 # 🔹 Obtener todos los Posts
 @posts_bp.route('/posts', methods=['GET'])
 def obtener_posts():
-    posts = Post.query.order_by(Post.id.desc()).all()
+    user_id = request.args.get('user_id')  # Obtener el ID del usuario actual desde Unity
 
+    posts = Post.query.order_by(Post.id.desc()).all()
     resultados = []
     for post in posts:
+        ya_le_dio_like = False
+        if user_id:
+            like = Like.query.filter_by(post_id=post.id, user_id=user_id).first()
+            ya_le_dio_like = like is not None
+
         resultados.append({
             'id': post.id,
             'user_id': post.user_id,
@@ -42,13 +48,15 @@ def obtener_posts():
             'image_url': post.image_url,
             'description': post.description,
             'created_at': post.created_at.isoformat() if post.created_at else None,
-            'latitude': post.latitude,      # <- nuevo
-            'longitude': post.longitude,    # <- nuevo
+            'latitude': post.latitude,
+            'longitude': post.longitude,
             'total_likes': Like.query.filter_by(post_id=post.id).count(),
-            'total_comments': Comment.query.filter_by(post_id=post.id).count()
+            'total_comments': Comment.query.filter_by(post_id=post.id).count(),
+            'likes': 1 if ya_le_dio_like else 0  # 👈 Este campo indica si el usuario ya dio like
         })
 
     return jsonify(resultados), 200
+
 
 # 🔹 Editar un Post
 @posts_bp.route('/posts/<int:post_id>', methods=['PUT'])
