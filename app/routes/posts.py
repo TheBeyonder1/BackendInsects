@@ -38,6 +38,7 @@ def obtener_posts():
         resultados.append({
             'id': post.id,
             'user_id': post.user_id,
+            'username': post.user.username if post.user else "Desconocido",
             'image_url': post.image_url,
             'description': post.description,
             'created_at': post.created_at.isoformat() if post.created_at else None,
